@@ -7,7 +7,7 @@ import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import NoteModal from './NoteModal';
 import SubTopicCard from './SubTopicCard';
-import TopicTypeSelector from './TopicTypeSelector';  // New component for selecting the topic type
+import TopicTypeSelector from './TopicTypeSelector';
 import ListCard from './ListCard';
 
 const NoteApp = () => {
@@ -17,7 +17,7 @@ const NoteApp = () => {
   const [newSubTopicName, setNewSubTopicName] = useState('');
   const [newItem, setNewItem] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSelectingType, setIsSelectingType] = useState(false);  // State to toggle topic type selection
+  const [isSelectingType, setIsSelectingType] = useState(false);
   const [selectedSubTopic, setSelectedSubTopic] = useState(null);
 
   const { user } = useAuth();
@@ -48,13 +48,15 @@ const NoteApp = () => {
     }
   };
 
-  const selectedTopicData = topics.find(t => t.id === selectedTopic);
+  const selectedTopicData = topics?.find(t => t.id === selectedTopic);
   const selectedSubTopicData = selectedTopicData?.subTopics?.find(st => st.id === selectedSubTopic);
+  const isModalNoteType = selectedTopicData?.type === 'modal-note';
 
   const renderContent = () => {
     if (!selectedTopic) return null;
 
-    const topic = topics.find(t => t.id === selectedTopic);
+    const topic = topics?.find(t => t.id === selectedTopic);
+    if (!topic) return null;
     
     switch (topic.type) {
       case 'modal-note':
@@ -67,7 +69,6 @@ const NoteApp = () => {
                 onClick={() => {
                   setSelectedSubTopic(subTopic.id);
                   setIsModalOpen(true);
-                  console.log("Modal open state set to true");
                 }}
                 onDelete={() => deleteSubTopic(selectedTopic, subTopic.id)}
               />
@@ -99,7 +100,7 @@ const NoteApp = () => {
               </button>
             </div>
             <div className="space-y-2">
-              {topic.items.map(item => (
+              {topic.items?.map(item => (
                 <div
                   key={item.id}
                   className="flex items-center p-4 bg-white rounded-lg shadow"
@@ -149,7 +150,7 @@ const NoteApp = () => {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {topic.items.map(item => (
+              {topic.items?.map(item => (
                 <ListCard
                   key={item.id}
                   item={item}
@@ -254,11 +255,29 @@ const NoteApp = () => {
                 {selectedTopic ? selectedTopicData?.name : 'Select a Topic'}
               </h1>
             </div>
+            {/* Only show the sub-topic input for modal-note type */}
+            {selectedTopic && isModalNoteType && (
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={newSubTopicName}
+                  onChange={(e) => setNewSubTopicName(e.target.value)}
+                  placeholder="New sub-topic"
+                  className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handleAddSubTopic}
+                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
         <main className="flex-1 overflow-auto p-6">
-          {renderContent()}
+          {selectedTopic && renderContent()}
         </main>
       </div>
 
