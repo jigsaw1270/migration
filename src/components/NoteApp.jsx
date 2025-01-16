@@ -11,6 +11,7 @@ import TopicTypeSelector from './TopicTypeSelector';
 import ListCard from './ListCard';
 import Loader from './loader/Loader';
 import StyledInput from './StyledInput';
+import logo from '../assets/logo.png';
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -179,7 +180,7 @@ const NoteApp = () => {
         <div className="p-4">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center">
-              <Users className="h-6 w-6 text-blue-500" />
+              <img src={logo} alt="logo" className='size-6' />
               <span className="ml-2 text-2xl font-technor-black">Migration</span>
             </div>
             <button 

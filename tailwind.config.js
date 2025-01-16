@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'login': "url('./src/assets/image/login.jpg')",
+
+      },
       fontFamily: {
         'technor-extralight': ['Technor-Extralight', 'sans-serif'],
         'technor-light': ['Technor-Light', 'sans-serif'],
