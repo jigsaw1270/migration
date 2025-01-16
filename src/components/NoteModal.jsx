@@ -6,12 +6,16 @@ import 'react-quill/dist/quill.snow.css';
 const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
   
-  // Reset state when modal opens with new content
   useEffect(() => {
     if (isOpen) {
       setEditContent(content || '');
       setIsEditing(false);
+      // Delay setting visibility for animation
+      setTimeout(() => setIsVisible(true), 10);
+    } else {
+      setIsVisible(false);
     }
   }, [isOpen, content]);
 
@@ -23,12 +27,15 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
   };
 
   const handleClose = () => {
-    // Auto-save if there are changes
-    if (editContent !== content) {
-      onSave(editContent);
-    }
-    setIsEditing(false);
-    onClose();
+    setIsVisible(false);
+    // Wait for animation to complete before closing
+    setTimeout(() => {
+      if (editContent !== content) {
+        onSave(editContent);
+      }
+      setIsEditing(false);
+      onClose();
+    }, 300);
   };
 
   const modules = {
@@ -45,9 +52,24 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white w-full h-full flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b bg-customPeach">
+    <div 
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        onClick={handleClose}
+      />
+      
+      {/* Modal */}
+      <div 
+        className={`bg-white w-[95%] max-w-8xl h-[90vh] flex flex-col relative rounded-lg shadow-xl transform transition-all duration-300 ${
+          isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+        }`}
+      >
+        <div className="flex items-center justify-between p-4 border-b bg-customPeach rounded-t-lg">
           <h2 className="text-xl font-technor-bold">{title}</h2>
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -69,7 +91,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
             )}
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
               <X className="h-5 w-5" />
             </button>

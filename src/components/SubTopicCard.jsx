@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Trash2, Check, X } from 'lucide-react';
+import StyledInput from './StyledInput';
 
 const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -26,15 +27,15 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-customTeal hover:border-customOrange min-h-[200px] flex flex-col">
-      <div className="flex justify-between items-start mb-3">
+    <div className=" relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-customTeal bg-customMint min-h-[200px] flex flex-col">
+      <div className="flex justify-between items-start mb-3 font-technor-medium">
         {isEditingTitle ? (
           <div className="flex-1 flex items-center gap-2">
-            <input
+            <StyledInput
               type="text"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
-              className="flex-1 px-2 py-1 border-2 border-customTeal rounded-md focus:outline-none focus:ring-2 focus:ring-customMint"
+             
               autoFocus
             />
             <button
@@ -53,31 +54,32 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
         ) : (
           <h3
             onClick={() => setIsEditingTitle(true)}
-            className="flex-1 text-lg font-technor-bold text-gray-800 hover:text-customTeal cursor-pointer transition-colors"
+            className="flex-1 text-2xl font-technor-bold text-gray-800 hover:text-customTeal cursor-pointer transition-colors text-center"
           >
             {subTopic.name}
           </h3>
         )}
-        <button
-          onClick={onDelete}
-          className="p-1 text-gray-400 hover:text-red-500 transition-colors ml-2"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
       </div>
 
       <div 
         onClick={onClick}
         className="flex-1 cursor-pointer"
       >
-        <p className="text-sm text-gray-500 mb-3">
+        <p className="text-sm text-gray-500 mb-3 text-center font-mono">
           {subTopic.createdAt ? new Date(subTopic.createdAt).toLocaleDateString() : 'Date not available'}
         </p>
+        <hr className="border-t border-customTeal mb-3" />
         
-        <div className="text-gray-600 text-sm line-clamp-4 hover:text-customTeal transition-colors">
+        <div className="text-gray-600 text-md line-clamp-4 hover:text-customTeal transition-colors font-technor-semibold">
           {getPreviewText(subTopic.content) || 'Click to add content...'}
         </div>
       </div>
+      <button
+          onClick={onDelete}
+          className="p-1 text-gray-400 hover:text-customOrange transition-colors ml-2 absolute bottom-2 right-2"
+        >
+          <Trash2 className="size-6" />
+        </button>
     </div>
   );
 };
