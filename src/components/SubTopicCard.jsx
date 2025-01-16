@@ -27,7 +27,7 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   };
 
   return (
-    <div className=" relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-customTeal bg-customMint min-h-[200px] flex flex-col">
+    <div className=" relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-customTeal bg-customMint min-h-[200px] flex flex-col hover:bg-orange-400 hover:text-white">
       <div className="flex justify-between items-start mb-3 font-technor-medium">
         {isEditingTitle ? (
           <div className="flex-1 flex items-center gap-2">
