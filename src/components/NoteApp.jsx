@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, PlusCircle, Menu, X, LogOut, Trash2, FileText } from 'lucide-react';
+import { Users, PlusCircle, Menu, X, LogOut, Trash2, FileText, Bird, Slack, NotebookPen, PackagePlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFirestore } from '../hooks/useFirestore';
 import { auth } from '../firebase/config';
@@ -9,6 +9,8 @@ import NoteModal from './NoteModal';
 import SubTopicCard from './SubTopicCard';
 import TopicTypeSelector from './TopicTypeSelector';
 import ListCard from './ListCard';
+import Loader from './loader/Loader';
+import StyledInput from './StyledInput';
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -167,18 +169,18 @@ const NoteApp = () => {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center h-screen"><Loader/></div>;
   }
 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-white shadow-lg transition-all duration-300 overflow-hidden`}>
+      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-customPeach shadow-lg transition-all duration-300 overflow-hidden`}>
         <div className="p-4">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center">
               <Users className="h-6 w-6 text-blue-500" />
-              <span className="ml-2 font-semibold">Note App</span>
+              <span className="ml-2 text-2xl font-technor-black">Migration</span>
             </div>
             <button 
               onClick={handleLogout}
@@ -191,7 +193,7 @@ const NoteApp = () => {
           <div className="space-y-4">
             {isSelectingType ? (
               <div className="space-y-2">
-                <input
+                <StyledInput
                   type="text"
                   value={newTopicName}
                   onChange={(e) => setNewTopicName(e.target.value)}
@@ -206,25 +208,25 @@ const NoteApp = () => {
             ) : (
               <button
                 onClick={() => setIsSelectingType(true)}
-                className="w-full flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold"
               >
-                <PlusCircle className="h-5 w-5 mr-2" />
+                <PackagePlus className="h-6 w-6 mr-2" />
                 New Topic
               </button>
             )}
-            <div className="space-y-2">
+            <div className="space-y-1">
               {topics.map(topic => (
                 <div
                   key={topic.id}
-                  className="flex items-center justify-between group"
+                  className="flex items-center  group font-technor-black text-3xl border-b-2 border-gray-200"
                 >
                   <button
                     onClick={() => setSelectedTopic(topic.id)}
-                    className={`flex-1 flex items-center p-2 text-left rounded-lg transition-colors ${
-                      selectedTopic === topic.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100'
+                    className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase   ${
+                      selectedTopic === topic.id ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
                     }`}
                   >
-                    <FileText className="h-4 w-4 mr-2" />
+                    <NotebookPen className="h-6 w-6 mr-2" />
                     {topic.name}
                   </button>
                   <button
@@ -242,7 +244,7 @@ const NoteApp = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm">
+        <header className="bg-customPeach shadow-sm font-technor-bold">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center">
               <button
@@ -251,7 +253,7 @@ const NoteApp = () => {
               >
                 {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
-              <h1 className="ml-4 text-xl font-semibold">
+              <h1 className="ml-4 text-3xl font-semibold">
                 {selectedTopic ? selectedTopicData?.name : 'Select a Topic'}
               </h1>
             </div>
