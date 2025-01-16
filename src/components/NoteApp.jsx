@@ -261,18 +261,18 @@ const NoteApp = () => {
             {/* Only show the sub-topic input for modal-note type */}
             {selectedTopic && isModalNoteType && (
               <div className="flex space-x-2">
-                <input
+                <StyledInput
                   type="text"
                   value={newSubTopicName}
                   onChange={(e) => setNewSubTopicName(e.target.value)}
-                  placeholder="New sub-topic"
-                  className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="New sub notes"
+                  className="px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   onClick={handleAddSubTopic}
-                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="py-2 px-6 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
                 >
-                  <PlusCircle className="h-5 w-5" />
+                  <PlusCircle className="h-6 w-6" />
                 </button>
               </div>
             )}
