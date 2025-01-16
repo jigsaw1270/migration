@@ -3,17 +3,17 @@ import { Trash2 } from 'lucide-react';
 
 const ListCard = ({ item, onDelete }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
+    <div className="bg-customMint p-4 rounded-lg shadow-md hover:scale-[1.05] text-black transition-all duration-300 border-2 hover:text-customPeach hover:bg-customTeal border-customTeal font-technor-medium">
       <div className="flex justify-between items-start">
-        <p className="text-gray-800">{item.content}</p>
+        <p className="text-lg">{item.content}</p>
         <button
           onClick={() => onDelete(item.id)}
-          className="p-1 text-gray-400 hover:text-red-500"
+          className="p-1 hover:text-customOrange"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-6 w-6" />
         </button>
       </div>
-      <p className="text-sm text-gray-500 mt-2">
+      <p className="text-sm mt-2">
         {new Date(item.createdAt).toLocaleDateString()}
       </p>
     </div>

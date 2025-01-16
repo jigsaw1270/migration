@@ -82,7 +82,7 @@ const NoteApp = () => {
         return (
           <div className="space-y-4">
             <div className="flex space-x-2">
-              <input
+              <StyledInput
                 type="text"
                 value={newItem}
                 onChange={(e) => setNewItem(e.target.value)}
@@ -96,7 +96,7 @@ const NoteApp = () => {
                     setNewItem('');
                   }
                 }}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                className="px-4 py-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
               >
                 Add Item
               </button>
@@ -105,7 +105,7 @@ const NoteApp = () => {
               {topic.items?.map(item => (
                 <div
                   key={item.id}
-                  className="flex items-center p-4 bg-white rounded-lg shadow"
+                  className="flex items-center p-4 bg-customMint rounded-lg shadow font-technor-medium hover:scale-[1.01] transition-all hover:bg-customTeal hover:text-customPeach duration-300 border-2 border-customTeal"
                 >
                   <input
                     type="checkbox"
@@ -118,7 +118,7 @@ const NoteApp = () => {
                   </span>
                   <button
                     onClick={() => deleteItem(selectedTopic, item.id)}
-                    className="ml-auto p-1 text-gray-400 hover:text-red-500"
+                    className="ml-auto p-1 text-gray-400 hover:text-customOrange"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -132,7 +132,7 @@ const NoteApp = () => {
         return (
           <>
             <div className="mb-4 flex space-x-2">
-              <input
+              <StyledInput
                 type="text"
                 value={newItem}
                 onChange={(e) => setNewItem(e.target.value)}
@@ -146,7 +146,7 @@ const NoteApp = () => {
                     setNewItem('');
                   }
                 }}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                className="px-4 py-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
               >
                 Add Card
               </button>
@@ -208,7 +208,7 @@ const NoteApp = () => {
             ) : (
               <button
                 onClick={() => setIsSelectingType(true)}
-                className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold"
+                className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
               >
                 <PackagePlus className="h-6 w-6 mr-2" />
                 New Topic
