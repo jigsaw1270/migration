@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, PlusCircle, Menu, X, LogOut, Trash2, FileText, Bird, Slack, NotebookPen, PackagePlus } from 'lucide-react';
+import { Users, PlusCircle, Menu, X, LogOut, Trash2, FileText, Bird, Slack, NotebookPen, PackagePlus, Quote } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFirestore } from '../hooks/useFirestore';
 import { auth } from '../firebase/config';
@@ -12,6 +12,7 @@ import ListCard from './ListCard';
 import Loader from './loader/Loader';
 import StyledInput from './StyledInput';
 import logo from '../assets/logo.png';
+import DailyQuote from './DailyQuote';
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -22,6 +23,7 @@ const NoteApp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSelectingType, setIsSelectingType] = useState(false);
   const [selectedSubTopic, setSelectedSubTopic] = useState(null);
+  const [showQuote, setShowQuote] = useState(false);
 
   const { user } = useAuth();
   const { topics, loading, addTopic, addSubTopic, updateSubTopicContent, updateSubTopicTitle, deleteSubTopic, deleteTopic, addItem, deleteItem, toggleItemStatus } = useFirestore(user?.uid);
@@ -56,6 +58,9 @@ const NoteApp = () => {
   const isModalNoteType = selectedTopicData?.type === 'modal-note';
 
   const renderContent = () => {
+    if (showQuote) {
+      return <DailyQuote />;
+    }
     if (!selectedTopic) return null;
 
     const topic = topics?.find(t => t.id === selectedTopic);
@@ -85,6 +90,7 @@ const NoteApp = () => {
       case 'checklist':
         return (
           <div className="space-y-4">
+
             <div className="flex space-x-2">
               <StyledInput
                 type="text"
@@ -195,6 +201,17 @@ const NoteApp = () => {
           </div>
 
           <div className="space-y-4">
+          <div className="border-b-2 border-gray-200">
+    <button
+      onClick={() => setShowQuote(true)}
+      className={`flex-1 flex items-center p-1 w-full text-left rounded-lg transition-colors uppercase font-technor-black text-3xl ${
+        showQuote ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
+      }`}
+    >
+      <Quote className="h-6 w-6 mr-2" />
+      Daily Quote
+    </button>
+  </div>
             {isSelectingType ? (
               <div className="space-y-2">
                 <StyledInput
@@ -224,12 +241,15 @@ const NoteApp = () => {
                   key={topic.id}
                   className="flex items-center  group font-technor-black text-3xl border-b-2 border-gray-200"
                 >
-                  <button
-                    onClick={() => setSelectedTopic(topic.id)}
-                    className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase   ${
-                      selectedTopic === topic.id ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
-                    }`}
-                  >
+                 <button
+  onClick={() => {
+    setSelectedTopic(topic.id);
+    setShowQuote(false);
+  }}
+  className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase ${
+    selectedTopic === topic.id ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
+  }`}
+>
                     <NotebookPen className="h-6 w-6 mr-2" />
                     {topic.name}
                   </button>
@@ -258,7 +278,7 @@ const NoteApp = () => {
                 {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
               <h1 className="ml-4 text-3xl font-semibold">
-                {selectedTopic ? selectedTopicData?.name : 'Select a Topic'}
+              {showQuote ? 'Daily Quote' : selectedTopic ? selectedTopicData?.name : 'Select a Topic'}
               </h1>
             </div>
             {/* Only show the sub-topic input for modal-note type */}
