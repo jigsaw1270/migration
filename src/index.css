@@ -67,3 +67,45 @@
         font-style: normal;
       }
 }
+
+@layer components {
+     .prose {
+       @apply text-lg leading-relaxed text-gray-700 font-technor-regular;
+     }
+   
+     .prose h1 {
+       @apply text-4xl font-technor-bold mt-6 mb-2;
+     }
+   
+     .prose h2 {
+       @apply text-3xl font-technor-semibold mt-5 mb-2;
+     }
+   
+     .prose h3 {
+       @apply text-2xl font-technor-medium mt-4 mb-2;
+     }
+   
+     .prose p {
+       @apply mb-4;
+     }
+   
+     .prose ul, .prose ol {
+       @apply pl-6 mb-4;
+     }
+   
+     .prose li {
+       @apply mb-2;
+     }
+   
+     .prose blockquote {
+       @apply pl-4 border-l-4 border-customTeal italic;
+     }
+   
+     .prose code {
+       @apply bg-gray-100 px-1 rounded font-mono;
+     }
+   
+     .prose pre {
+       @apply bg-gray-100 p-4 rounded-lg my-4;
+     }
+   }

@@ -24,7 +24,7 @@ const NoteApp = () => {
   const [selectedSubTopic, setSelectedSubTopic] = useState(null);
 
   const { user } = useAuth();
-  const { topics, loading, addTopic, addSubTopic, updateSubTopicContent, deleteSubTopic, deleteTopic, addItem, deleteItem, toggleItemStatus } = useFirestore(user?.uid);
+  const { topics, loading, addTopic, addSubTopic, updateSubTopicContent, updateSubTopicTitle, deleteSubTopic, deleteTopic, addItem, deleteItem, toggleItemStatus } = useFirestore(user?.uid);
   const navigate = useNavigate();
 
   const handleAddTopic = async (type) => {
@@ -74,6 +74,9 @@ const NoteApp = () => {
                   setIsModalOpen(true);
                 }}
                 onDelete={() => deleteSubTopic(selectedTopic, subTopic.id)}
+                onTitleUpdate={(subTopicId, newTitle) => 
+            updateSubTopicTitle(selectedTopic, subTopicId, newTitle)
+          }
               />
             ))}
           </div>

@@ -41,7 +41,8 @@ export const useFirestore = (userId) => {
       id: Date.now().toString(),
       name,
       content: '',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     await updateDoc(topicRef, {
@@ -50,10 +51,39 @@ export const useFirestore = (userId) => {
   };
 
   const updateSubTopicContent = async (topicId, subTopicId, content) => {
+    const htmlContent = content || '';
     const topicRef = doc(db, 'topics', topicId);
     const topic = topics.find(t => t.id === topicId);
     const updatedSubTopics = topic.subTopics.map(subTopic => 
-      subTopic.id === subTopicId ? { ...subTopic, content } : subTopic
+      subTopic.id === subTopicId 
+        ? { 
+            ...subTopic, 
+            content: htmlContent,
+            updatedAt: new Date().toISOString()
+          } 
+        : subTopic
+    );
+    
+    await updateDoc(topicRef, {
+      subTopics: updatedSubTopics
+    });
+  };
+
+  // New function to update sub-topic title
+  const updateSubTopicTitle = async (topicId, subTopicId, newTitle) => {
+    const topicRef = doc(db, 'topics', topicId);
+    const topic = topics.find(t => t.id === topicId);
+    
+    if (!topic) return;
+
+    const updatedSubTopics = topic.subTopics.map(subTopic => 
+      subTopic.id === subTopicId 
+        ? { 
+            ...subTopic, 
+            name: newTitle,
+            updatedAt: new Date().toISOString()
+          } 
+        : subTopic
     );
     
     await updateDoc(topicRef, {
@@ -69,7 +99,8 @@ export const useFirestore = (userId) => {
       id: Date.now().toString(),
       content,
       completed: false, // only used for checklist type
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     await updateDoc(topicRef, {
@@ -81,7 +112,13 @@ export const useFirestore = (userId) => {
     const topicRef = doc(db, 'topics', topicId);
     const topic = topics.find(t => t.id === topicId);
     const updatedItems = topic.items.map(item =>
-      item.id === itemId ? { ...item, completed: !item.completed } : item
+      item.id === itemId 
+        ? { 
+            ...item, 
+            completed: !item.completed,
+            updatedAt: new Date().toISOString()
+          } 
+        : item
     );
     
     await updateDoc(topicRef, {
@@ -119,6 +156,7 @@ export const useFirestore = (userId) => {
     addTopic,
     addSubTopic,
     updateSubTopicContent,
+    updateSubTopicTitle, // Added new function to the return object
     addItem,
     toggleItemStatus,
     deleteItem,
