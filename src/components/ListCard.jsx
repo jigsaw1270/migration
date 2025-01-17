@@ -3,7 +3,7 @@ import { Trash2 } from 'lucide-react';
 
 const ListCard = ({ item, onDelete }) => {
   return (
-    <div className="bg-customMint p-4 rounded-lg shadow-md hover:scale-[1.05] text-black transition-all duration-300 border-2 hover:text-customPeach hover:bg-customTeal border-customTeal font-technor-medium">
+    <div className="bg-customMint p-4 rounded-lg shadow-md hover:scale-[1.05] text-black transition-all duration-300 border-2 hover:text-customMint hover:bg-customTeal border-customTeal font-technor-medium">
       <div className="flex justify-between items-start">
         <p className="text-lg">{item.content}</p>
         <button

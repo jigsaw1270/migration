@@ -13,6 +13,7 @@ import Loader from './loader/Loader';
 import StyledInput from './StyledInput';
 import logo from '../assets/logo.png';
 import DailyQuote from './DailyQuote';
+import Logout from './buttons/Logout';
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -185,19 +186,23 @@ const NoteApp = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-customPeach shadow-lg transition-all duration-300 overflow-hidden`}>
+      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden`}>
         <div className="p-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="mb-8">
             <div className="flex items-center">
               <img src={logo} alt="logo" className='size-6' />
               <span className="ml-2 text-2xl font-technor-black">Migration</span>
             </div>
-            <button 
+            <div className="mt-2 text-lg font-technor-medium">
+            {user?.displayName}
+            <p className='font-technor-light text-sm pb-2'>{user?.email}</p>
+          </div>
+            <Logout
               onClick={handleLogout}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              title={'Logout'}
             >
-              <LogOut className="h-5 w-5 text-gray-500" />
-            </button>
+            
+            </Logout>
           </div>
 
           <div className="space-y-4">

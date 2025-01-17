@@ -27,7 +27,7 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   };
 
   return (
-    <div className=" relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 border-customTeal bg-customMint min-h-[200px] flex flex-col hover:bg-orange-400 hover:text-white">
+    <div className=" relative p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-2 text-customTeal border-customTeal bg-customMint min-h-[200px] flex flex-col hover:bg-customTeal hover:text-customMint">
       <div className="flex justify-between items-start mb-3 font-technor-medium">
         {isEditingTitle ? (
           <div className="flex-1 flex items-center gap-2">
@@ -40,13 +40,13 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
             />
             <button
               onClick={handleTitleSave}
-              className="p-1 text-customTeal hover:text-customMint"
+              className="p-1"
             >
               <Check className="h-5 w-5" />
             </button>
             <button
               onClick={handleTitleCancel}
-              className="p-1 text-gray-400 hover:text-red-500"
+              className="p-1"
             >
               <X className="h-5 w-5" />
             </button>
@@ -54,7 +54,7 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
         ) : (
           <h3
             onClick={() => setIsEditingTitle(true)}
-            className="flex-1 text-2xl font-technor-bold text-gray-800 hover:text-customTeal cursor-pointer transition-colors text-center"
+            className="flex-1 text-2xl font-technor-bold cursor-pointer transition-colors text-center"
           >
             {subTopic.name}
           </h3>
@@ -65,12 +65,12 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
         onClick={onClick}
         className="flex-1 cursor-pointer"
       >
-        <p className="text-sm text-gray-500 mb-3 text-center font-mono">
+        <p className="text-sm mb-3 text-center font-mono">
           {subTopic.createdAt ? new Date(subTopic.createdAt).toLocaleDateString() : 'Date not available'}
         </p>
         <hr className="border-t border-customTeal mb-3" />
         
-        <div className="text-gray-600 text-md line-clamp-4 hover:text-customTeal transition-colors font-technor-semibold">
+        <div className="text-md line-clamp-4  transition-colors font-technor-semibold">
           {getPreviewText(subTopic.content) || 'Click to add content...'}
         </div>
       </div>
