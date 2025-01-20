@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2, Check, X } from 'lucide-react';
+import { Trash2, Check, X, Copy } from 'lucide-react';
 import StyledInput from './StyledInput';
 
 const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
@@ -24,6 +24,11 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   const handleTitleCancel = () => {
     setEditedTitle(subTopic.name);
     setIsEditingTitle(false);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(subTopic.content.replace(/<[^>]*>?/gm, ' ')); // Remove HTML tags
+    alert('Text copied to clipboard!');
   };
 
   return (
@@ -79,6 +84,12 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
           className="p-1 text-gray-400 hover:text-customOrange transition-colors ml-2 absolute bottom-2 right-2"
         >
           <Trash2 className="size-6" />
+        </button>
+      <button
+          onClick={handleCopy}
+          className="p-1 text-gray-400 hover:text-customOrange transition-colors ml-2 absolute bottom-2 right-10"
+        >
+          <Copy className="size-6" />
         </button>
     </div>
   );
