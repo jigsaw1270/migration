@@ -39,6 +39,9 @@ const NoteApp = () => {
   const [isSelectingType, setIsSelectingType] = useState(false);
   const [selectedSubTopic, setSelectedSubTopic] = useState(null);
   const [showQuote, setShowQuote] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [topicToDelete, setTopicToDelete] = useState(null);
+
 
   const { user } = useAuth();
   const {
@@ -308,11 +311,15 @@ const NoteApp = () => {
                     {topic.name}
                   </button>
                   <button
-                    onClick={() => deleteTopic(topic.id)}
-                    className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+  onClick={() => {
+    setShowDeleteModal(true);
+    setTopicToDelete(topic.id);
+  }}
+  className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+>
+  <Trash2 className="h-4 w-4" />
+</button>
+
                 </div>
               ))}
             </div>
@@ -326,6 +333,30 @@ const NoteApp = () => {
           <Logout onClick={handleLogout} title={"Logout"}></Logout>
           <DayNightButton className="block md:hidden ml-4" />
         </div>
+        {showDeleteModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-all duration-300 font-technor-bold">
+    <div className="bg-customMint  dark:bg-dark1 p-6 rounded-lg shadow-lg text-center dark:text-customPeach">
+      <p className="text-lg mb-4">Are you sure you want to delete this topic?</p>
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={() => {
+            deleteTopic(topicToDelete); // Use the stored topic ID for deletion
+            setShowDeleteModal(false); // Close modal after confirming
+          }}
+          className="px-4 py-2 bg-customTeal text-customPeach rounded hover:bg-customOrange"
+        >
+          Delete
+        </button>
+        <button
+          onClick={() => setShowDeleteModal(false)}
+          className="px-4 py-2 bg-customPeach rounded hover:bg-slate-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       </div>
 
       {/* Main Content */}

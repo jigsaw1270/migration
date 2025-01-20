@@ -6,6 +6,7 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(subTopic.name);
 
+
   // Strip HTML tags for preview
   const getPreviewText = (htmlContent) => {
     const tempDiv = document.createElement('div');
@@ -87,7 +88,7 @@ const SubTopicCard = ({ subTopic, onClick, onDelete, onTitleUpdate }) => {
         </button>
       <button
           onClick={handleCopy}
-          className="p-1 text-gray-400 hover:text-customOrange transition-colors ml-2 absolute bottom-2 right-10"
+          className="p-1 text-gray-400 hover:text-customOrange transition-colors ml-2 absolute top-2 right-2"
         >
           <Copy className="size-6" />
         </button>
