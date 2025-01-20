@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -23,8 +24,12 @@ export default {
       colors: {
         customOrange: '#CD5C08',
         customPeach: '#FFF5E4',
+        mainbg: '#FFF2C2',
         customMint: '#C1D8C3',
         customTeal: '#6A9C89',
+        dark1: '#222831',
+        darkhover: '#31363F',
+        darkTeal: "#50727B"
       },
     },
   },

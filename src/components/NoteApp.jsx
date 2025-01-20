@@ -14,6 +14,7 @@ import StyledInput from './StyledInput';
 import logo from '../assets/logo.png';
 import DailyQuote from './DailyQuote';
 import Logout from './buttons/Logout';
+import DayNightButton from './buttons/DayNightButton';
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -186,7 +187,7 @@ const NoteApp = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden`}>
+      <div className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach`}>
         <div className="p-4">
           <div className="mb-8">
             <div className="flex items-center">
@@ -210,7 +211,7 @@ const NoteApp = () => {
     <button
       onClick={() => setShowQuote(true)}
       className={`flex-1 flex items-center p-1 w-full text-left rounded-lg transition-colors uppercase font-technor-black text-3xl ${
-        showQuote ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
+        showQuote ? 'bg-customMint text-customOrange dark:bg-darkTeal dark:text-customMint' : 'hover:bg-customMint dark:hover:bg-darkhover'
       }`}
     >
       <Quote className="h-6 w-6 mr-2" />
@@ -252,7 +253,7 @@ const NoteApp = () => {
     setShowQuote(false);
   }}
   className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase ${
-    selectedTopic === topic.id ? 'bg-customMint text-customOrange' : 'hover:bg-customMint'
+    selectedTopic === topic.id ? 'bg-customMint text-customOrange dark:bg-darkTeal dark:text-customMint ' : 'hover:bg-customMint dark:hover:bg-darkhover'
   }`}
 >
                     <NotebookPen className="h-6 w-6 mr-2" />
@@ -273,18 +274,19 @@ const NoteApp = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-customPeach shadow-sm font-technor-bold">
+        <header className="bg-customPeach shadow-sm font-technor-bold dark:bg-dark1 dark-animation">
           <div className="flex items-center justify-between p-4">
-            <div className="flex items-center">
+            <div className="flex items-center justify-between w-full px-4">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 hover:bg-gray-100 rounded-full"
+                className="p-2 rounded-full"
               >
-                {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {isSidebarOpen ? <X className="h-5 w-5 dark:text-customPeach" /> : <Menu className="h-5 w-5 dark:text-customPeach" />}
               </button>
-              <h1 className="ml-4 text-3xl font-semibold">
+              <h1 className="ml-4 text-3xl font-semibold dark:text-customPeach">
               {showQuote ? 'Daily Quote' : selectedTopic ? selectedTopicData?.name : 'Select a Topic'}
               </h1>
+              <DayNightButton/>
             </div>
             {/* Only show the sub-topic input for modal-note type */}
             {selectedTopic && isModalNoteType && (
@@ -307,7 +309,7 @@ const NoteApp = () => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-customPeach dark-animation">
           {selectedTopic && renderContent()}
         </main>
       </div>

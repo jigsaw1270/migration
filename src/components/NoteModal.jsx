@@ -69,7 +69,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
           isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b bg-customPeach rounded-t-lg">
+        <div className="flex items-center justify-between p-4 border-b bg-customPeach rounded-t-lg dark:bg-dark1 dark:text-customPeach dark:border-darkTeal">
           <h2 className="text-xl font-technor-bold">{title}</h2>
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -98,7 +98,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
           </div>
         </div>
         
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach">
           {isEditing ? (
             <div className="h-full p-4">
               <ReactQuill
@@ -111,7 +111,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
             </div>
           ) : (
             <div 
-              className="p-6 prose max-w-none"
+              className="p-6 prose max-w-none dark:text-customPeach"
               dangerouslySetInnerHTML={{ __html: editContent }}
             />
           )}
