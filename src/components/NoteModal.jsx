@@ -100,13 +100,13 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
         
         <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach">
           {isEditing ? (
-            <div className="h-full p-4">
+            <div className="h-full p-4 dark:text-customPeach">
               <ReactQuill
                 theme="snow"
                 value={editContent}
                 onChange={setEditContent}
                 modules={modules}
-                className="h-[calc(100%-60px)]"
+                className="h-[calc(100%-60px)] dark:text-customPeach"
               />
             </div>
           ) : (

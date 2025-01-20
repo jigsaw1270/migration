@@ -21,7 +21,7 @@ const StyledWrapper = styled.div`
   .input {
     color: #000;
     font-size: 0.9rem;
-    background-color: transparent;
+    background-color: #C1D8C3;
     width: 100%;
     box-sizing: border-box;
     padding-inline: 0.5em;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-const DayNightButton = () => {
+const DayNightButton = ({className}) => {
     const toggleDarkMode = () => {
         const isDarkMode = document.documentElement.classList.toggle('dark');
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
@@ -14,7 +14,7 @@ const DayNightButton = () => {
         }
       }, []);
   return (
-    <StyledWrapper>
+    <StyledWrapper className={className}>
       <label className="switch">
         <input type="checkbox" onChange={toggleDarkMode} />
         <span className="slider" />

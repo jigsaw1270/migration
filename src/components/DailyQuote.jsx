@@ -39,8 +39,8 @@ const QuoteApp = () => {
   }, [quotes]);
 
   return (
-    <div className="max-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <main className="container max-w-4xl p-24 hover:scale-125 transition-all duration-300">
+    <div className="max-h-screen bg-customPeach dark:bg-darkhover flex flex-col items-center justify-center">
+      <main className="container md:max-w-4xl md:p-24 p-0 hover:scale-125 transition-all duration-300">
         {/* Display Daily Quote */}
         <div className="p-6 bg-customMint rounded-lg shadow-md mb-6">
           <div className="mb-4 flex items-center justify-between">
@@ -55,7 +55,7 @@ const QuoteApp = () => {
           </div>
           {quote ? (
             <>
-              <blockquote className="text-4xl font-medium font-technor-bold mb-4 italic">
+              <blockquote className="text-medium md:text-4xl font-medium font-technor-bold mb-4 italic">
                 "{quote.quote}"
               </blockquote>
               <p className="text-right text-gray-600 font-medium font-technor-semibold">
