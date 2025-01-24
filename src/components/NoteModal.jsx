@@ -98,7 +98,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
           </div>
         </div>
         
-        <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach">
+        <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach cursor-text"    onClick={() => setIsEditing(true)}>
           {isEditing ? (
             <div className="h-full p-4 dark:text-customPeach">
               <ReactQuill
