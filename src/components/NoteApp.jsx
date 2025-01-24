@@ -28,6 +28,7 @@ import logo from "../assets/logo.png";
 import DailyQuote from "./DailyQuote";
 import Logout from "./buttons/Logout";
 import DayNightButton from "./buttons/DayNightButton";
+import Home from "./Home";
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -89,6 +90,13 @@ const NoteApp = () => {
   const isModalNoteType = selectedTopicData?.type === "modal-note";
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <Loader />
+        </div>
+      );
+    }
     if (showQuote) {
       return <DailyQuote />;
     }
@@ -231,8 +239,14 @@ const NoteApp = () => {
         <div className="p-4">
           <div className="mb-8">
             <div className="flex items-center">
-              <img src={logo} alt="logo" className="size-6" />
-              <span className="ml-2 text-2xl font-technor-black">
+              <img src={logo} alt="logo" className="size-6 cursor-pointer" onClick={() => {
+                  setSelectedTopic(null);
+                  setShowQuote(false);
+                }} />
+              <span className="ml-2 text-2xl font-technor-black cursor-pointer" onClick={() => {
+                  setSelectedTopic(null);
+                  setShowQuote(false);
+                }}>
                 Migration
               </span>
               <button
@@ -405,7 +419,13 @@ const NoteApp = () => {
         </header>
 
         <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-customPeach dark-animation">
-          {selectedTopic && renderContent()}
+          {!showQuote && !selectedTopic ? (
+            // Render Welcome Section
+           <Home/>
+          ) : (
+            // Render Main Content if a Topic is Selected
+            selectedTopic && renderContent()
+          )}
         </main>
       </div>
 
