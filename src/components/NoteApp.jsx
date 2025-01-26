@@ -12,6 +12,8 @@ import {
   ListCollapse,
   ChevronDown,
   PanelBottomClose,
+  Upload,
+  Image,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -45,6 +47,28 @@ const NoteApp = () => {
   const [topicToDelete, setTopicToDelete] = useState(null);
   const [isListView, setIsListView] = useState(false);
 const [collapse, setIsCollapse] = useState(false);
+const [backgroundImage, setBackgroundImage] = useState(
+  localStorage.getItem('userBackgroundImage') || null
+);
+
+const handleBackgroundUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Image = reader.result;
+      setBackgroundImage(base64Image);
+      localStorage.setItem('userBackgroundImage', base64Image);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const clearBackground = () => {
+  setBackgroundImage(null);
+  localStorage.removeItem('userBackgroundImage');
+};
+
   const { user } = useAuth();
   const {
     topics,
@@ -224,7 +248,7 @@ const [collapse, setIsCollapse] = useState(false);
       <div
         className={`${
           isSidebarOpen ? "w-64" : "w-0"
-        } bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach fixed md:relative h-full z-50 md:z-auto`}
+        } bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach fixed md:relative h-full z-50 md:z-20`}
       >
         <div className="p-4">
           <div className="mb-8">
@@ -374,7 +398,7 @@ const [collapse, setIsCollapse] = useState(false);
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-customPeach shadow-sm font-technor-bold dark:bg-dark1 dark-animation">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-4 z-10">
             <div className="flex items-center justify-start md:justify-between w-full px-4">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -416,14 +440,53 @@ const [collapse, setIsCollapse] = useState(false);
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-customPeach dark-animation">
-          {!showQuote && !selectedTopic ? (
-            // Render Welcome Section
-           <Home/>
-          ) : (
-            // Render Main Content if a Topic is Selected
-            selectedTopic && renderContent()
-          )}
+        <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-customPeach dark-animation"
+          style={{
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+          // filter: backgroundImage ? 'blur(5px)' : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          transition: 'background-image 0.6s fade-in'
+        }}>
+  <div className="relative z-10">
+    {!showQuote && !selectedTopic ? (
+      <> 
+     
+        <div className="flex items-center gap-2 pb-8">
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={handleBackgroundUpload} 
+          className="hidden" 
+          id="background-upload"
+        />
+        <label 
+          htmlFor="background-upload" 
+          className="cursor-pointer flex items-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint"
+        >
+       <Image className="size-4"/>
+        </label>
+        {backgroundImage && (
+          <button 
+            onClick={clearBackground}
+            className="cursor-pointer flex items-center p-2 bg-customOrange text-white rounded-lg "
+          >
+            <X className="size-4"/>
+          </button>
+        )}
+      </div>
+      <Home/>
+  
+   
+      </>
+      
+    ) : (
+      selectedTopic && renderContent()
+    )}
+  </div>
+
+        
         </main>
       </div>
 
