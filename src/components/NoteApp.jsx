@@ -12,6 +12,8 @@ import {
   NotebookPen,
   PackagePlus,
   Quote,
+  Columns,
+  List,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -42,6 +44,7 @@ const NoteApp = () => {
   const [showQuote, setShowQuote] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [topicToDelete, setTopicToDelete] = useState(null);
+  const [isListView, setIsListView] = useState(false);
 
   const { user } = useAuth();
   const {
@@ -203,8 +206,30 @@ const NoteApp = () => {
               >
                 Add Card
               </button>
+              <div className="flex justify-end mb-4">
+        <button 
+          onClick={() => setIsListView(!isListView)}
+          className="flex items-center px-4 py-2 bg-customTeal text-white rounded-lg hover:bg-customMint transition-all duration-300"
+        >
+          {isListView ? (
+            <>
+              <Columns className="mr-2 h-5 w-5" /> 
+            </>
+          ) : (
+            <>
+              <List className="mr-2 h-5 w-5" /> 
+            </>
+          )}
+        </button>
+      </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className={`
+        grid gap-4 
+        ${isListView 
+          ? 'grid-cols-1' 
+          : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+        }`
+      }>
               {topic.items?.map((item) => (
                 <ListCard
                   key={item.id}

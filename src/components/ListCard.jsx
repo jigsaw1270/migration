@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Trash2, Copy, Edit2, Check, X, MessageCircle } from "lucide-react";
 
 const ListCard = ({ item, onDelete, onUpdateItem }) => {
@@ -64,7 +64,7 @@ const ListCard = ({ item, onDelete, onUpdateItem }) => {
         draggable
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        className={`bg-customMint p-4 rounded-lg shadow-md hover:scale-[1.05] text-black transition-all duration-300 border-2 hover:text-customMint hover:bg-customTeal border-customTeal font-technor-medium cursor-move ${
+        className={`bg-customMint p-4 rounded-lg shadow-md hover:scale-[1.02] text-black transition-all duration-300 border-2 hover:text-customMint hover:bg-customTeal border-customTeal font-technor-medium cursor-move ${
           isDragging ? "opacity-50" : ""
         }`}
       >
