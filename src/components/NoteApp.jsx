@@ -56,6 +56,7 @@ const NoteApp = () => {
     addItem,
     deleteItem,
     toggleItemStatus,
+    updateItem,
   } = useFirestore(user?.uid);
   const navigate = useNavigate();
 
@@ -209,6 +210,7 @@ const NoteApp = () => {
                   key={item.id}
                   item={item}
                   onDelete={(itemId) => deleteItem(selectedTopic, itemId)}
+                  onUpdateItem={(itemId, updates) => updateItem(selectedTopic, itemId, updates)}
                 />
               ))}
             </div>

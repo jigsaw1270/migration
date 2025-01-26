@@ -98,6 +98,7 @@ export const useFirestore = (userId) => {
     const newItem = {
       id: Date.now().toString(),
       content,
+      subtext:'',
       completed: false, // only used for checklist type
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -150,6 +151,24 @@ export const useFirestore = (userId) => {
     await deleteDoc(doc(db, 'topics', topicId));
   };
 
+  const updateItem = async (topicId, itemId, updates) => {
+    const topicRef = doc(db, 'topics', topicId);
+    const topic = topics.find(t => t.id === topicId);
+    const updatedItems = topic.items.map(item =>
+      item.id === itemId 
+        ? { 
+            ...item, 
+            ...updates,
+            updatedAt: new Date().toISOString()
+          } 
+        : item
+    );
+    
+    await updateDoc(topicRef, {
+      items: updatedItems
+    });
+  };
+
   return {
     topics,
     loading,
@@ -161,6 +180,7 @@ export const useFirestore = (userId) => {
     toggleItemStatus,
     deleteItem,
     deleteSubTopic,
-    deleteTopic
+    deleteTopic,
+    updateItem
   };
 };
