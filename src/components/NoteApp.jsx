@@ -1,19 +1,17 @@
 import { useState } from "react";
 import {
-  Users,
   PlusCircle,
   Menu,
   X,
-  LogOut,
   Trash2,
-  FileText,
-  Bird,
-  Slack,
   NotebookPen,
   PackagePlus,
   Quote,
   Columns,
   List,
+  ListCollapse,
+  ChevronDown,
+  PanelBottomClose,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -46,7 +44,7 @@ const NoteApp = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [topicToDelete, setTopicToDelete] = useState(null);
   const [isListView, setIsListView] = useState(false);
-
+const [collapse, setIsCollapse] = useState(false);
   const { user } = useAuth();
   const {
     topics,
@@ -295,7 +293,15 @@ const NoteApp = () => {
                 New Topic
               </button>
             )}
-            <div className="space-y-1">
+            <button onClick={() => setIsCollapse(!collapse)}  className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500">
+              <PanelBottomClose className="size-5 mx-2"/>
+                Topics
+            </button>
+            <div
+  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+    collapse ? 'h-0 opacity-0' : 'h-auto opacity-100'
+  }`}
+>
               {topics.map((topic) => (
                 <div
                   key={topic.id}
