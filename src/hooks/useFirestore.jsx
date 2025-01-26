@@ -169,6 +169,14 @@ export const useFirestore = (userId) => {
     });
   };
 
+  const reorderItems = async (topicId, updatedItems) => {
+    const topicRef = doc(db, 'topics', topicId);
+    
+    await updateDoc(topicRef, {
+      items: updatedItems
+    });
+  };
+
   return {
     topics,
     loading,
@@ -181,6 +189,7 @@ export const useFirestore = (userId) => {
     deleteItem,
     deleteSubTopic,
     deleteTopic,
-    updateItem
+    updateItem,
+    reorderItems
   };
 };

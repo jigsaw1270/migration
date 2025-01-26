@@ -31,6 +31,7 @@ import DailyQuote from "./DailyQuote";
 import Logout from "./buttons/Logout";
 import DayNightButton from "./buttons/DayNightButton";
 import Home from "./Home";
+import Checklist from "./CheckList";
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -60,6 +61,7 @@ const NoteApp = () => {
     deleteItem,
     toggleItemStatus,
     updateItem,
+    reorderItems
   } = useFirestore(user?.uid);
   const navigate = useNavigate();
 
@@ -132,56 +134,19 @@ const NoteApp = () => {
 
       case "checklist":
         return (
-          <div className="space-y-4">
-            <div className="flex space-x-2">
-              <StyledInput
-                type="text"
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-                placeholder="Add new item"
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-customPeach"
-              />
-              <button
-                onClick={() => {
-                  if (newItem.trim()) {
-                    addItem(selectedTopic, newItem);
-                    setNewItem("");
-                  }
-                }}
-                className="px-4 py-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
-              >
-                Add Item
-              </button>
-            </div>
-            <div className="space-y-2">
-              {topic.items?.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center p-4 bg-customMint rounded-lg shadow font-technor-medium hover:scale-[1.01] transition-all hover:bg-customTeal dark:text-black dark:hover:text-customPeach hover:text-customPeach duration-300 border-2 border-customTeal"
-                >
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => toggleItemStatus(selectedTopic, item.id)}
-                    className="h-4 w-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500"
-                  />
-                  <span
-                    className={`ml-3 ${
-                      item.completed ? "line-through text-gray-400" : ""
-                    }`}
-                  >
-                    {item.content}
-                  </span>
-                  <button
-                    onClick={() => deleteItem(selectedTopic, item.id)}
-                    className="ml-auto p-1 text-gray-400 hover:text-customOrange"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Checklist
+          topic={topic}
+          selectedTopic={selectedTopic}
+          newItem={newItem}
+          setNewItem={setNewItem}
+          addItem={addItem}
+          toggleItemStatus={toggleItemStatus}
+          deleteItem={deleteItem}
+          onReorderItems={(updatedItems) => {
+            // Call the new reorder method
+            reorderItems(selectedTopic, updatedItems);
+          }}
+        />
         );
 
       case "list-card":
@@ -415,7 +380,7 @@ const NoteApp = () => {
                   <Menu className="h-5 w-5 dark:text-customPeach" />
                 )}
               </button>
-              <h1 className="ml-4 text-3xl font-semibold dark:text-customPeach">
+              <h1 className="ml-4 text-3xl font-semibold dark:text-customPeach uppercase">
                 {showQuote
                   ? "Daily Quote"
                   : selectedTopic
