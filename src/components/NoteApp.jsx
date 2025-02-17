@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   PlusCircle,
   Menu,
@@ -50,6 +50,34 @@ const [collapse, setIsCollapse] = useState(false);
 const [backgroundImage, setBackgroundImage] = useState(
   localStorage.getItem('userBackgroundImage') || null
 );
+const [sidebarWidth, setSidebarWidth] = useState(localStorage.getItem('sidebarWidth') || 256); // 256px = 16rem (w-64)
+const [isResizing, setIsResizing] = useState(false);
+
+useEffect(() => {
+  const handleMouseMove = (e) => {
+    if (!isResizing) return;
+    
+    const newWidth = e.clientX;
+    if (newWidth > 150 && newWidth < 600) {  // Min 150px, Max 600px
+      setSidebarWidth(newWidth);
+      localStorage.setItem('sidebarWidth', newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsResizing(false);
+  };
+
+  if (isResizing) {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }
+
+  return () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+}, [isResizing]);
 
 const handleBackgroundUpload = (e) => {
   const file = e.target.files[0];
@@ -246,9 +274,8 @@ const clearBackground = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`${
-          isSidebarOpen ? "w-64" : "w-0"
-        } bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach fixed md:relative h-full z-50 md:z-20`}
+        style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0' }}
+        className={`bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach fixed md:relative h-full z-50 md:z-20 no-scrollbar`}
       >
         <div className="p-4">
           <div className="mb-8">
@@ -394,6 +421,23 @@ const clearBackground = () => {
           </div>
         )}
       </div>
+
+      {/* Resize Handle */}
+      {isSidebarOpen && (
+        <div
+          className="w-1 cursor-col-resize hover:bg-customTeal active:bg-customTeal transition-colors duration-200 relative"
+          onMouseDown={() => setIsResizing(true)}
+          style={{
+            position: 'absolute',
+            left: `${sidebarWidth}px`,
+            top: 0,
+            bottom: 0,
+            zIndex: 51,
+          }}
+        >
+          <div className="absolute inset-y-0 -left-1 -right-1" />
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">

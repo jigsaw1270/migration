@@ -43,13 +43,23 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
       [{ 'header': [1, 2, 3, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
+      [{ 'align': ['', 'center', 'right', 'justify'] }], // Updated alignment configuration
       ['blockquote', 'code-block'],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
       ['link', 'code'],
       ['clean']
     ],
   };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'align',       // Make sure 'align' is included
+    'blockquote', 'code-block',
+    'list', 'bullet',
+    'link', 'code',
+  ];
 
   return (
     <div 
@@ -100,12 +110,13 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
         
         <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach cursor-text"    onClick={() => setIsEditing(true)}>
           {isEditing ? (
-            <div className="h-full p-4 dark:text-customPeach">
+            <div className="h-full p-4 dark:text-customPeach quill-wrapper">
               <ReactQuill
                 theme="snow"
                 value={editContent}
                 onChange={setEditContent}
                 modules={modules}
+                formats={formats}
                 className="h-[calc(100%-60px)] dark:text-customPeach"
               />
             </div>

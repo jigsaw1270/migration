@@ -73,19 +73,19 @@
     @apply dark:transition-all dark:duration-300 transition-all duration-300;
     }
      .prose {
-       @apply text-lg leading-relaxed text-gray-700 font-technor-regular;
+       @apply text-lg leading-relaxed  font-technor-regular;
      }
    
      .prose h1 {
-       @apply text-4xl font-technor-bold mt-6 mb-2;
+       @apply text-4xl font-technor-bold mt-6 mb-2 dark:text-customPeach;
      }
    
      .prose h2 {
-       @apply text-3xl font-technor-semibold mt-5 mb-2;
+       @apply text-3xl font-technor-semibold mt-5 mb-2 dark:text-customPeach;
      }
    
      .prose h3 {
-       @apply text-2xl font-technor-medium mt-4 mb-2;
+       @apply text-2xl font-technor-medium mt-4 mb-2 dark:text-customPeach;
      }
    
      .prose p {
@@ -101,14 +101,65 @@
      }
    
      .prose blockquote {
-       @apply pl-4 border-l-4 border-customTeal italic;
+       @apply pl-4 border-l-4 border-customTeal italic dark:text-customPeach;
      }
    
      .prose code {
-       @apply bg-gray-100 px-1 rounded font-mono;
+       @apply bg-customTeal px-1 rounded font-mono;
      }
    
      .prose pre {
-       @apply bg-gray-100 p-4 rounded-lg my-4;
+       @apply bg-customTeal p-4 rounded-lg my-4;
      }
    }
+
+   @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* add the code bellow */ 
+@layer utilities {
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+     /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+    }
+  }
+
+   /* Add these styles for ReactQuill alignment */
+.quill-wrapper .ql-editor {
+  min-height: 100px;
+}
+
+.quill-wrapper .ql-editor p {
+  margin-bottom: 1em;
+}
+
+.ql-editor .ql-align-center {
+  text-align: center;
+}
+
+.ql-editor .ql-align-right {
+  text-align: right;
+}
+
+.ql-editor .ql-align-justify {
+  text-align: justify;
+}
+
+/* Also ensure alignment works in preview mode */
+.prose .ql-align-center {
+  text-align: center;
+}
+
+.prose .ql-align-right {
+  text-align: right;
+}
+
+.prose .ql-align-justify {
+  text-align: justify;
+}
