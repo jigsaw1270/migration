@@ -15,6 +15,38 @@ import {
   Upload,
   Image,
   GripVertical,
+  Folder,
+  FolderOpen,
+  Edit2,
+  Check,
+  BookOpen,
+  Briefcase,
+  Calendar,
+  Code,
+  Coffee,
+  FileText,
+  Flag,
+  Heart,
+  Home as HomeIcon,
+  Lightbulb,
+  Mail,
+  MessageSquare,
+  Music,
+  ShoppingCart,
+  Star,
+  Target,
+  Palette,
+  Camera,
+  Zap,
+  Trophy,
+  Globe,
+  Clock,
+  Bookmark,
+  Book,
+  Rocket,
+  Users,
+  Settings,
+  Award,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -50,6 +82,17 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+// Helper function to get icon component by name
+const getIconComponent = (iconName) => {
+  const iconMap = {
+    NotebookPen, BookOpen, Book, Briefcase, Code, Coffee, Calendar,
+    FileText, Flag, Heart, HomeIcon, Lightbulb, Mail, MessageSquare,
+    Music, ShoppingCart, Star, Target, Palette, Camera, Zap, Trophy,
+    Globe, Clock, Bookmark, Rocket, Users, Settings, Award
+  };
+  return iconMap[iconName] || NotebookPen;
+};
+
 // Sortable Topic Item Component
 const SortableTopicItem = ({ topic, isSelected, onSelect, onDelete }) => {
   const {
@@ -66,6 +109,8 @@ const SortableTopicItem = ({ topic, isSelected, onSelect, onDelete }) => {
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
+
+  const IconComponent = getIconComponent(topic.icon);
 
   return (
     <div
@@ -88,7 +133,7 @@ const SortableTopicItem = ({ topic, isSelected, onSelect, onDelete }) => {
             : "hover:bg-customMint dark:hover:bg-darkhover"
         }`}
       >
-        <NotebookPen className="h-6 w-6 mr-2" />
+        <IconComponent className="h-6 w-6 mr-2" />
         {topic.name}
       </button>
       <button
@@ -97,6 +142,172 @@ const SortableTopicItem = ({ topic, isSelected, onSelect, onDelete }) => {
       >
         <Trash2 className="h-4 w-4" />
       </button>
+    </div>
+  );
+};
+
+// Sortable Folder Component
+const SortableFolder = ({ folder, topics, isSelected, onSelect, onDelete, onRename, onToggle, selectedTopic }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(folder.name);
+  
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: String(folder.id) });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  const folderTopics = topics.filter(t => t.folderId === folder.id);
+
+  const handleRename = () => {
+    if (editName.trim() && editName !== folder.name) {
+      onRename(folder.id, editName);
+    }
+    setIsEditing(false);
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div className="flex items-center group font-technor-black text-3xl border-b-2 border-gray-200">
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing p-2 hover:bg-customMint dark:hover:bg-darkhover rounded-l-lg"
+        >
+          <GripVertical className="h-5 w-5 text-gray-400" />
+        </div>
+        <button
+          onClick={() => onToggle(folder.id)}
+          className="p-1 hover:bg-customMint dark:hover:bg-darkhover rounded-lg"
+        >
+          {folder.isOpen ? (
+            <FolderOpen className="h-6 w-6 text-customTeal" />
+          ) : (
+            <Folder className="h-6 w-6 text-customTeal" />
+          )}
+        </button>
+        {isEditing ? (
+          <div className="flex-1 flex items-center gap-2 px-2">
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') {
+                  setEditName(folder.name);
+                  setIsEditing(false);
+                }
+              }}
+              autoFocus
+              className="flex-1 px-2 py-1 text-sm border rounded bg-white dark:bg-dark1 dark:text-customPeach uppercase"
+            />
+            <Check className="h-4 w-4 cursor-pointer text-green-500" onClick={handleRename} />
+          </div>
+        ) : (
+          <span className="flex-1 px-2 py-1 uppercase">{folder.name}</span>
+        )}
+        <button
+          onClick={() => setIsEditing(true)}
+          className="p-2 text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Edit2 className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => onDelete(folder.id)}
+          className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+      {folder.isOpen && folderTopics.length > 0 && (
+        <div className="ml-8">
+          {folderTopics.map((topic) => (
+            <SortableTopicItem
+              key={topic.id}
+              topic={topic}
+              isSelected={selectedTopic === topic.id}
+              onSelect={onSelect}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Icon Selector Component
+const AVAILABLE_ICONS = [
+  { name: 'NotebookPen', icon: NotebookPen },
+  { name: 'BookOpen', icon: BookOpen },
+  { name: 'Book', icon: Book },
+  { name: 'Briefcase', icon: Briefcase },
+  { name: 'Code', icon: Code },
+  { name: 'Coffee', icon: Coffee },
+  { name: 'Calendar', icon: Calendar },
+  { name: 'FileText', icon: FileText },
+  { name: 'Flag', icon: Flag },
+  { name: 'Heart', icon: Heart },
+  { name: 'HomeIcon', icon: HomeIcon },
+  { name: 'Lightbulb', icon: Lightbulb },
+  { name: 'Mail', icon: Mail },
+  { name: 'MessageSquare', icon: MessageSquare },
+  { name: 'Music', icon: Music },
+  { name: 'ShoppingCart', icon: ShoppingCart },
+  { name: 'Star', icon: Star },
+  { name: 'Target', icon: Target },
+  { name: 'Palette', icon: Palette },
+  { name: 'Camera', icon: Camera },
+  { name: 'Zap', icon: Zap },
+  { name: 'Trophy', icon: Trophy },
+  { name: 'Globe', icon: Globe },
+  { name: 'Clock', icon: Clock },
+  { name: 'Bookmark', icon: Bookmark },
+  { name: 'Rocket', icon: Rocket },
+  { name: 'Users', icon: Users },
+  { name: 'Settings', icon: Settings },
+  { name: 'Award', icon: Award },
+];
+
+const IconSelector = ({ selectedIcon, onSelectIcon, onClose }) => {
+  return (
+    <div className="absolute z-50 mt-2 bg-white dark:bg-dark1 border-2 border-customTeal rounded-lg shadow-xl p-4 w-80">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-technor-bold text-lg dark:text-customPeach">Select Icon</h3>
+        <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="grid grid-cols-6 gap-2 max-h-64 overflow-y-auto sidebar-scroll">
+        {AVAILABLE_ICONS.map(({ name, icon: Icon }) => (
+          <button
+            key={name}
+            onClick={() => {
+              onSelectIcon(name);
+              onClose();
+            }}
+            className={`p-3 rounded-lg border-2 transition-all duration-200 hover:bg-customMint dark:hover:bg-darkTeal ${
+              selectedIcon === name
+                ? 'border-customTeal bg-customMint dark:bg-darkTeal'
+                : 'border-gray-300 dark:border-gray-600'
+            }`}
+            title={name}
+          >
+            <Icon className="h-5 w-5 dark:text-customPeach" />
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -168,6 +379,7 @@ const clearBackground = () => {
   const { user } = useAuth();
   const {
     topics,
+    folders,
     loading,
     addTopic,
     addSubTopic,
@@ -180,9 +392,21 @@ const clearBackground = () => {
     toggleItemStatus,
     updateItem,
     reorderItems,
-    reorderTopics
+    reorderTopics,
+    addFolder,
+    renameFolder,
+    deleteFolder,
+    toggleFolderOpen,
+    moveTopicToFolder,
+    moveTopicOutOfFolder,
+    reorderFolders
   } = useFirestore(user?.uid);
   const navigate = useNavigate();
+  
+  const [newFolderName, setNewFolderName] = useState("");
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [selectedTopicIcon, setSelectedTopicIcon] = useState("NotebookPen");
+  const [showIconSelector, setShowIconSelector] = useState(false);
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -199,20 +423,42 @@ const clearBackground = () => {
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      const oldIndex = topics.findIndex((topic) => topic.id === active.id);
-      const newIndex = topics.findIndex((topic) => topic.id === over.id);
+    if (!over || active.id === over.id) return;
 
-      const reorderedTopics = arrayMove(topics, oldIndex, newIndex);
-      reorderTopics(reorderedTopics);
+    // Check if we're dragging a folder
+    const isActiveFolder = folders.some(f => String(f.id) === String(active.id));
+    const isOverFolder = folders.some(f => String(f.id) === String(over.id));
+
+    if (isActiveFolder && isOverFolder) {
+      // Reordering folders
+      const oldIndex = folders.findIndex((folder) => String(folder.id) === String(active.id));
+      const newIndex = folders.findIndex((folder) => String(folder.id) === String(over.id));
+      const reorderedFolders = arrayMove(folders, oldIndex, newIndex);
+      reorderFolders(reorderedFolders);
+    } else if (!isActiveFolder && !isOverFolder) {
+      // Reordering topics (only those not in folders)
+      const topicsWithoutFolder = topics.filter(t => !t.folderId);
+      const oldIndex = topicsWithoutFolder.findIndex((topic) => String(topic.id) === String(active.id));
+      const newIndex = topicsWithoutFolder.findIndex((topic) => String(topic.id) === String(over.id));
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const reorderedTopics = arrayMove(topicsWithoutFolder, oldIndex, newIndex);
+        reorderTopics(reorderedTopics);
+      }
+    } else if (!isActiveFolder && isOverFolder) {
+      // Dragging a topic over a folder - move topic into folder
+      const topicId = String(active.id);
+      const folderId = String(over.id);
+      moveTopicToFolder(topicId, folderId);
     }
   };
 
   const handleAddTopic = async (type) => {
     if (newTopicName.trim()) {
-      await addTopic(newTopicName, type);
+      await addTopic(newTopicName, type, selectedTopicIcon);
       setNewTopicName("");
       setIsSelectingType(false);
+      setSelectedTopicIcon("NotebookPen"); // Reset to default
     }
   };
 
@@ -229,6 +475,14 @@ const clearBackground = () => {
       navigate("/login");
     } catch (error) {
       console.error("Error signing out:", error);
+    }
+  };
+
+  const handleAddFolder = async () => {
+    if (newFolderName.trim()) {
+      await addFolder(newFolderName);
+      setNewFolderName("");
+      setIsCreatingFolder(false);
     }
   };
 
@@ -415,17 +669,40 @@ const clearBackground = () => {
               </button>
             </div>
             {isSelectingType ? (
-              <div className="space-y-2">
-                <StyledInput
-                  type="text"
-                  value={newTopicName}
-                  onChange={(e) => setNewTopicName(e.target.value)}
-                  placeholder="Topic name"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="space-y-2 relative">
+                <div className="flex gap-2">
+                  <StyledInput
+                    type="text"
+                    value={newTopicName}
+                    onChange={(e) => setNewTopicName(e.target.value)}
+                    placeholder="Topic name"
+                    className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={() => setShowIconSelector(!showIconSelector)}
+                    className="p-2 border-2 border-customTeal rounded-lg hover:bg-customMint transition-colors"
+                    title="Select Icon"
+                  >
+                    {(() => {
+                      const SelectedIcon = getIconComponent(selectedTopicIcon);
+                      return <SelectedIcon className="h-6 w-6 dark:text-customPeach" />;
+                    })()}
+                  </button>
+                </div>
+                {showIconSelector && (
+                  <IconSelector
+                    selectedIcon={selectedTopicIcon}
+                    onSelectIcon={setSelectedTopicIcon}
+                    onClose={() => setShowIconSelector(false)}
+                  />
+                )}
                 <TopicTypeSelector
                   onSelect={(type) => handleAddTopic(type)}
-                  onCancel={() => setIsSelectingType(false)}
+                  onCancel={() => {
+                    setIsSelectingType(false);
+                    setShowIconSelector(false);
+                    setSelectedTopicIcon("NotebookPen");
+                  }}
                 />
               </div>
             ) : (
@@ -437,26 +714,78 @@ const clearBackground = () => {
                 New Topic
               </button>
             )}
+            {isCreatingFolder ? (
+              <div className="space-y-2">
+                <StyledInput
+                  type="text"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Folder name"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleAddFolder();
+                    if (e.key === 'Escape') setIsCreatingFolder(false);
+                  }}
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleAddFolder}
+                    className="flex-1 px-4 py-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold"
+                  >
+                    Create
+                  </button>
+                  <button
+                    onClick={() => setIsCreatingFolder(false)}
+                    className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsCreatingFolder(true)}
+                className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500"
+              >
+                <Folder className="h-6 w-6 mr-2" />
+                New Folder
+              </button>
+            )}
             <button onClick={() => setIsCollapse(!collapse)}  className="w-full flex items-center justify-center p-2 bg-customTeal text-white rounded-lg hover:bg-customMint font-technor-bold transition-all duration-500">
               <PanelBottomClose className="size-5 mx-2"/>
-                Topics
+                Topics & Folders
             </button>
             <div
   className={`sidebar-scroll overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out ${
     collapse ? 'max-h-0 opacity-0' : 'max-h-[calc(100vh-20rem)] opacity-100'
   }`}
 >
-              {topics && topics.length > 0 && (
+              {((folders && folders.length > 0) || (topics && topics.length > 0)) && (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={topics.map((t) => String(t.id))}
+                  items={[...folders.map((f) => String(f.id)), ...topics.filter(t => !t.folderId).map((t) => String(t.id))]}
                   strategy={verticalListSortingStrategy}
                 >
-                  {topics.map((topic) => (
+                  {folders.map((folder) => (
+                    <SortableFolder
+                      key={folder.id}
+                      folder={folder}
+                      topics={topics}
+                      selectedTopic={selectedTopic}
+                      onSelect={(topicId) => {
+                        setSelectedTopic(topicId);
+                        setShowQuote(false);
+                      }}
+                      onDelete={deleteFolder}
+                      onRename={renameFolder}
+                      onToggle={toggleFolderOpen}
+                    />
+                  ))}
+                  {topics.filter(t => !t.folderId).map((topic) => (
                     <SortableTopicItem
                       key={topic.id}
                       topic={topic}

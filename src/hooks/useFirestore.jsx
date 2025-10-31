@@ -4,6 +4,7 @@ import { collection, query, where, onSnapshot, addDoc, updateDoc, doc, deleteDoc
 
 export const useFirestore = (userId) => {
   const [topics, setTopics] = useState([]);
+  const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +29,29 @@ export const useFirestore = (userId) => {
     return () => unsubscribe();
   }, [userId]);
 
-  const addTopic = async (name, type) => {
+  // Listen to folders
+  useEffect(() => {
+    if (!userId) return;
+
+    const foldersQuery = query(
+      collection(db, 'folders'),
+      where('userId', '==', userId)
+    );
+    
+    const unsubscribe = onSnapshot(foldersQuery, (snapshot) => {
+      const foldersData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+      
+      setFolders(foldersData);
+    });
+
+    return () => unsubscribe();
+  }, [userId]);
+
+  const addTopic = async (name, type, icon = 'NotebookPen') => {
     // Get the current highest order value
     const maxOrder = topics.length > 0 
       ? Math.max(...topics.map(t => t.order || 0)) 
@@ -37,6 +60,7 @@ export const useFirestore = (userId) => {
     await addDoc(collection(db, 'topics'), {
       name,
       type, // 'modal-note', 'checklist', or 'list-card'
+      icon, // Store the icon name
       userId,
       subTopics: [], // for modal-note type
       items: [], // for checklist and list-card types
@@ -202,13 +226,89 @@ export const useFirestore = (userId) => {
     await Promise.all(updatePromises);
   };
 
+  // Folder management functions
+  const addFolder = async (name) => {
+    const maxOrder = folders.length > 0 
+      ? Math.max(...folders.map(f => f.order || 0)) 
+      : -1;
+    
+    await addDoc(collection(db, 'folders'), {
+      name,
+      userId,
+      order: maxOrder + 1,
+      isOpen: true, // folders are open by default
+      createdAt: new Date().toISOString()
+    });
+  };
+
+  const renameFolder = async (folderId, newName) => {
+    const folderRef = doc(db, 'folders', folderId);
+    await updateDoc(folderRef, {
+      name: newName,
+      updatedAt: new Date().toISOString()
+    });
+  };
+
+  const deleteFolder = async (folderId) => {
+    // Move all topics out of this folder before deleting
+    const topicsInFolder = topics.filter(t => t.folderId === folderId);
+    const updatePromises = topicsInFolder.map(async (topic) => {
+      const topicRef = doc(db, 'topics', topic.id);
+      await updateDoc(topicRef, {
+        folderId: null,
+        updatedAt: new Date().toISOString()
+      });
+    });
+    
+    await Promise.all(updatePromises);
+    await deleteDoc(doc(db, 'folders', folderId));
+  };
+
+  const toggleFolderOpen = async (folderId) => {
+    const folderRef = doc(db, 'folders', folderId);
+    const folder = folders.find(f => f.id === folderId);
+    await updateDoc(folderRef, {
+      isOpen: !folder.isOpen,
+      updatedAt: new Date().toISOString()
+    });
+  };
+
+  const moveTopicToFolder = async (topicId, folderId) => {
+    const topicRef = doc(db, 'topics', topicId);
+    await updateDoc(topicRef, {
+      folderId: folderId,
+      updatedAt: new Date().toISOString()
+    });
+  };
+
+  const moveTopicOutOfFolder = async (topicId) => {
+    const topicRef = doc(db, 'topics', topicId);
+    await updateDoc(topicRef, {
+      folderId: null,
+      updatedAt: new Date().toISOString()
+    });
+  };
+
+  const reorderFolders = async (reorderedFolders) => {
+    const updatePromises = reorderedFolders.map(async (folder, index) => {
+      const folderRef = doc(db, 'folders', folder.id);
+      await updateDoc(folderRef, {
+        order: index,
+        updatedAt: new Date().toISOString()
+      });
+    });
+    
+    await Promise.all(updatePromises);
+  };
+
   return {
     topics,
+    folders,
     loading,
     addTopic,
     addSubTopic,
     updateSubTopicContent,
-    updateSubTopicTitle, // Added new function to the return object
+    updateSubTopicTitle,
     addItem,
     toggleItemStatus,
     deleteItem,
@@ -216,6 +316,14 @@ export const useFirestore = (userId) => {
     deleteTopic,
     updateItem,
     reorderItems,
-    reorderTopics
+    reorderTopics,
+    // Folder functions
+    addFolder,
+    renameFolder,
+    deleteFolder,
+    toggleFolderOpen,
+    moveTopicToFolder,
+    moveTopicOutOfFolder,
+    reorderFolders
   };
 };
