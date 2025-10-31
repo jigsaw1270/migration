@@ -14,6 +14,7 @@ import {
   PanelBottomClose,
   Upload,
   Image,
+  GripVertical,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -32,6 +33,73 @@ import Logout from "./buttons/Logout";
 import DayNightButton from "./buttons/DayNightButton";
 import Home from "./Home";
 import Checklist from "./CheckList";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+// Sortable Topic Item Component
+const SortableTopicItem = ({ topic, isSelected, onSelect, onDelete }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: String(topic.id) });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center group font-technor-black text-3xl border-b-2 border-gray-200"
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing p-2 hover:bg-customMint dark:hover:bg-darkhover rounded-l-lg"
+      >
+        <GripVertical className="h-5 w-5 text-gray-400" />
+      </div>
+      <button
+        onClick={() => onSelect(topic.id)}
+        className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase ${
+          isSelected
+            ? "bg-customMint text-customOrange dark:bg-darkTeal dark:text-customMint"
+            : "hover:bg-customMint dark:hover:bg-darkhover"
+        }`}
+      >
+        <NotebookPen className="h-6 w-6 mr-2" />
+        {topic.name}
+      </button>
+      <button
+        onClick={() => onDelete(topic.id)}
+        className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <Trash2 className="h-4 w-4" />
+      </button>
+    </div>
+  );
+};
 
 const NoteApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -111,9 +179,34 @@ const clearBackground = () => {
     deleteItem,
     toggleItemStatus,
     updateItem,
-    reorderItems
+    reorderItems,
+    reorderTopics
   } = useFirestore(user?.uid);
   const navigate = useNavigate();
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = topics.findIndex((topic) => topic.id === active.id);
+      const newIndex = topics.findIndex((topic) => topic.id === over.id);
+
+      const reorderedTopics = arrayMove(topics, oldIndex, newIndex);
+      reorderTopics(reorderedTopics);
+    }
+  };
 
   const handleAddTopic = async (type) => {
     if (newTopicName.trim()) {
@@ -353,36 +446,34 @@ const clearBackground = () => {
     collapse ? 'max-h-0 opacity-0' : 'max-h-[calc(100vh-20rem)] opacity-100'
   }`}
 >
-              {topics.map((topic) => (
-                <div
-                  key={topic.id}
-                  className="flex items-center  group font-technor-black text-3xl border-b-2 border-gray-200"
+              {topics && topics.length > 0 && (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={topics.map((t) => String(t.id))}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <button
-                    onClick={() => {
-                      setSelectedTopic(topic.id);
-                      setShowQuote(false);
-                    }}
-                    className={`flex-1 flex items-center p-1 text-left rounded-lg transition-colors uppercase ${
-                      selectedTopic === topic.id
-                        ? "bg-customMint text-customOrange dark:bg-darkTeal dark:text-customMint "
-                        : "hover:bg-customMint dark:hover:bg-darkhover"
-                    }`}
-                  >
-                    <NotebookPen className="h-6 w-6 mr-2" />
-                    {topic.name}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowDeleteModal(true);
-                      setTopicToDelete(topic.id);
-                    }}
-                    className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
+                  {topics.map((topic) => (
+                    <SortableTopicItem
+                      key={topic.id}
+                      topic={topic}
+                      isSelected={selectedTopic === topic.id}
+                      onSelect={(topicId) => {
+                        setSelectedTopic(topicId);
+                        setShowQuote(false);
+                      }}
+                      onDelete={(topicId) => {
+                        setShowDeleteModal(true);
+                        setTopicToDelete(topicId);
+                      }}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+              )}
             </div>
           </div>
         </div>

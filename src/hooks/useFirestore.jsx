@@ -9,12 +9,18 @@ export const useFirestore = (userId) => {
   useEffect(() => {
     if (!userId) return;
 
-    const q = query(collection(db, 'topics'), where('userId', '==', userId));
+    const q = query(
+      collection(db, 'topics'), 
+      where('userId', '==', userId)
+    );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const topicsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      }));
+      }))
+      // Sort on client-side by order field
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+      
       setTopics(topicsData);
       setLoading(false);
     });
@@ -23,12 +29,18 @@ export const useFirestore = (userId) => {
   }, [userId]);
 
   const addTopic = async (name, type) => {
+    // Get the current highest order value
+    const maxOrder = topics.length > 0 
+      ? Math.max(...topics.map(t => t.order || 0)) 
+      : -1;
+    
     await addDoc(collection(db, 'topics'), {
       name,
       type, // 'modal-note', 'checklist', or 'list-card'
       userId,
       subTopics: [], // for modal-note type
       items: [], // for checklist and list-card types
+      order: maxOrder + 1,
       createdAt: new Date().toISOString()
     });
   };
@@ -177,6 +189,19 @@ export const useFirestore = (userId) => {
     });
   };
 
+  const reorderTopics = async (reorderedTopics) => {
+    // Update each topic with its new order index
+    const updatePromises = reorderedTopics.map(async (topic, index) => {
+      const topicRef = doc(db, 'topics', topic.id);
+      await updateDoc(topicRef, {
+        order: index,
+        updatedAt: new Date().toISOString()
+      });
+    });
+    
+    await Promise.all(updatePromises);
+  };
+
   return {
     topics,
     loading,
@@ -190,6 +215,7 @@ export const useFirestore = (userId) => {
     deleteSubTopic,
     deleteTopic,
     updateItem,
-    reorderItems
+    reorderItems,
+    reorderTopics
   };
 };
