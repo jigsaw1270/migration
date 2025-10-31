@@ -27,9 +27,12 @@ export default {
         mainbg: '#FFF2C2',
         customMint: '#C1D8C3',
         customTeal: '#6A9C89',
-        dark1: '#222831',
-        darkhover: '#31363F',
-        darkTeal: "#50727B"
+        // Dark Mode Colors - New Palette
+        dark1: '#253336',        // Sidebar/Header background
+        darkhover: '#12101d',    // Main background (darkest)
+        darkTeal: '#414b4d',     // Selected/Accent color
+        darkBorder: '#636b6b',   // Borders/Dividers
+        darkText: '#999b9a'      // Text color (lightest)
       },
     },
   },

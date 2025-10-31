@@ -210,7 +210,7 @@ const SortableFolder = ({ folder, topics, isSelected, onSelect, onDelete, onRena
                 }
               }}
               autoFocus
-              className="flex-1 px-2 py-1 text-sm border rounded bg-white dark:bg-dark1 dark:text-customPeach uppercase"
+              className="flex-1 px-2 py-1 text-sm border rounded bg-white dark:bg-dark1 dark:text-darkText uppercase"
             />
             <Check className="h-4 w-4 cursor-pointer text-green-500" onClick={handleRename} />
           </div>
@@ -284,8 +284,8 @@ const IconSelector = ({ selectedIcon, onSelectIcon, onClose }) => {
   return (
     <div className="absolute z-50 mt-2 bg-white dark:bg-dark1 border-2 border-customTeal rounded-lg shadow-xl p-4 w-80">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-technor-bold text-lg dark:text-customPeach">Select Icon</h3>
-        <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+        <h3 className="font-technor-bold text-lg dark:text-darkText">Select Icon</h3>
+        <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-darkTeal rounded">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -300,11 +300,11 @@ const IconSelector = ({ selectedIcon, onSelectIcon, onClose }) => {
             className={`p-3 rounded-lg border-2 transition-all duration-200 hover:bg-customMint dark:hover:bg-darkTeal ${
               selectedIcon === name
                 ? 'border-customTeal bg-customMint dark:bg-darkTeal'
-                : 'border-gray-300 dark:border-gray-600'
+                : 'border-gray-300 dark:border-darkBorder'
             }`}
             title={name}
           >
-            <Icon className="h-5 w-5 dark:text-customPeach" />
+            <Icon className="h-5 w-5 dark:text-darkText" />
           </button>
         ))}
       </div>
@@ -622,7 +622,7 @@ const clearBackground = () => {
       {/* Sidebar */}
       <div
         style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0' }}
-        className={`bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-customPeach fixed md:relative h-full z-50 md:z-20 no-scrollbar`}
+        className={`bg-customPeach shadow-lg transition-all duration-300 overflow-x-hidden dark:bg-dark1 dark:text-darkText fixed md:relative h-full z-50 md:z-20 no-scrollbar`}
       >
         <div className="p-4">
           <div className="mb-8">
@@ -642,9 +642,9 @@ const clearBackground = () => {
                 className="p-2 rounded-full block md:hidden ml-auto"
               >
                 {isSidebarOpen ? (
-                  <X className="h-5 w-5 dark:text-customPeach" />
+                  <X className="h-5 w-5 dark:text-darkText" />
                 ) : (
-                  <Menu className="h-5 w-5 dark:text-customPeach" />
+                  <Menu className="h-5 w-5 dark:text-darkText" />
                 )}
               </button>
             </div>
@@ -685,7 +685,7 @@ const clearBackground = () => {
                   >
                     {(() => {
                       const SelectedIcon = getIconComponent(selectedTopicIcon);
-                      return <SelectedIcon className="h-6 w-6 dark:text-customPeach" />;
+                      return <SelectedIcon className="h-6 w-6 dark:text-darkText" />;
                     })()}
                   </button>
                 </div>
@@ -736,7 +736,7 @@ const clearBackground = () => {
                   </button>
                   <button
                     onClick={() => setIsCreatingFolder(false)}
-                    className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400"
+                    className="flex-1 px-4 py-2 bg-gray-300 dark:bg-darkTeal rounded-lg hover:bg-gray-400"
                   >
                     Cancel
                   </button>
@@ -816,7 +816,7 @@ const clearBackground = () => {
         </div>
         {showDeleteModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-all duration-300 font-technor-bold">
-            <div className="bg-customMint  dark:bg-dark1 p-6 rounded-lg shadow-lg text-center dark:text-customPeach">
+            <div className="bg-customMint  dark:bg-dark1 p-6 rounded-lg shadow-lg text-center dark:text-darkText">
               <p className="text-lg mb-4">
                 Are you sure you want to delete this topic?
               </p>
@@ -832,7 +832,7 @@ const clearBackground = () => {
                 </button>
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="px-4 py-2 bg-customPeach rounded hover:bg-slate-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                  className="px-4 py-2 bg-customPeach rounded hover:bg-slate-300 dark:bg-darkTeal dark:hover:bg-darkBorder"
                 >
                   Cancel
                 </button>
@@ -869,12 +869,12 @@ const clearBackground = () => {
                 className="p-2 rounded-full"
               >
                 {isSidebarOpen ? (
-                  <X className="h-5 w-5 dark:text-customPeach" />
+                  <X className="h-5 w-5 dark:text-darkText" />
                 ) : (
-                  <Menu className="h-5 w-5 dark:text-customPeach" />
+                  <Menu className="h-5 w-5 dark:text-darkText" />
                 )}
               </button>
-              <h1 className="ml-4 text-3xl font-semibold dark:text-customPeach uppercase">
+              <h1 className="ml-4 text-3xl font-semibold dark:text-darkText uppercase">
                 {showQuote
                   ? "Daily Quote"
                   : selectedTopic
@@ -904,7 +904,7 @@ const clearBackground = () => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-customPeach dark-animation"
+        <main className="flex-1 overflow-auto p-6 bg-mainbg dark:bg-darkhover dark:text-darkText dark-animation"
           style={{
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
           // filter: backgroundImage ? 'blur(5px)' : undefined,

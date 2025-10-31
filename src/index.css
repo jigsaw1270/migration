@@ -77,15 +77,15 @@
      }
    
      .prose h1 {
-       @apply text-4xl font-technor-bold mt-6 mb-2 dark:text-customPeach;
+       @apply text-4xl font-technor-bold mt-6 mb-2 dark:text-darkText;
      }
    
      .prose h2 {
-       @apply text-3xl font-technor-semibold mt-5 mb-2 dark:text-customPeach;
+       @apply text-3xl font-technor-semibold mt-5 mb-2 dark:text-darkText;
      }
    
      .prose h3 {
-       @apply text-2xl font-technor-medium mt-4 mb-2 dark:text-customPeach;
+       @apply text-2xl font-technor-medium mt-4 mb-2 dark:text-darkText;
      }
    
      .prose p {
@@ -101,7 +101,7 @@
      }
    
      .prose blockquote {
-       @apply pl-4 border-l-4 border-customTeal italic dark:text-customPeach;
+       @apply pl-4 border-l-4 border-darkBorder italic dark:text-darkText;
      }
    
      .prose code {
@@ -141,19 +141,19 @@
     }
     
     .sidebar-scroll::-webkit-scrollbar-thumb {
-      background: #14b8a6;
+      background: #636b6b;
       border-radius: 4px;
       background-clip: padding-box;
     }
     
     .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-      background: #0d9488;
+      background: #414b4d;
     }
     
     /* Firefox scrollbar */
     .sidebar-scroll {
       scrollbar-width: thin;
-      scrollbar-color: #14b8a6 rgba(0, 0, 0, 0.1);
+      scrollbar-color: #636b6b rgba(0, 0, 0, 0.1);
     }
   }
 

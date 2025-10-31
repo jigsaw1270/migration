@@ -79,7 +79,7 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
           isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b bg-customPeach rounded-t-lg dark:bg-dark1 dark:text-customPeach dark:border-darkTeal">
+        <div className="flex items-center justify-between p-4 border-b bg-customPeach rounded-t-lg dark:bg-dark1 dark:text-darkText dark:border-darkTeal">
           <h2 className="text-xl font-technor-bold">{title}</h2>
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -108,21 +108,21 @@ const NoteModal = ({ isOpen, onClose, title, content, onSave }) => {
           </div>
         </div>
         
-        <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-customPeach cursor-text"    onClick={() => setIsEditing(true)}>
+        <div className="flex-1 overflow-auto bg-customPeach dark:bg-darkhover dark:text-darkText cursor-text"    onClick={() => setIsEditing(true)}>
           {isEditing ? (
-            <div className="h-full p-4 dark:text-customPeach quill-wrapper">
+            <div className="h-full p-4 dark:text-darkText quill-wrapper">
               <ReactQuill
                 theme="snow"
                 value={editContent}
                 onChange={setEditContent}
                 modules={modules}
                 formats={formats}
-                className="h-[calc(100%-60px)] dark:text-customPeach"
+                className="h-[calc(100%-60px)] dark:text-darkText"
               />
             </div>
           ) : (
             <div 
-              className="p-6 prose max-w-none dark:text-customPeach"
+              className="p-6 prose max-w-none dark:text-darkText"
               dangerouslySetInnerHTML={{ __html: editContent }}
             />
           )}
