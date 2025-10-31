@@ -349,8 +349,8 @@ const clearBackground = () => {
                 Topics
             </button>
             <div
-  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-    collapse ? 'h-0 opacity-0' : 'h-auto opacity-100'
+  className={`sidebar-scroll overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out ${
+    collapse ? 'max-h-0 opacity-0' : 'max-h-[calc(100vh-20rem)] opacity-100'
   }`}
 >
               {topics.map((topic) => (
